@@ -18,7 +18,7 @@ var port     = process.env.PORT || 8080; // set our port
 
 // DATABASE SETUP
 var mongoose   = require('mongoose');
-mongoose.connect('mongodb://node:node@novus.modulusmongo.net:27017/Iganiq8o'); // connect to our database
+mongoose.connect("mongodb://localhost/movies-dev"); // connect to our database
 
 // Handle the connection event
 var db = mongoose.connection;
@@ -28,8 +28,8 @@ db.once('open', function() {
   console.log("DB connection alive");
 });
 
-// Bear models lives here
-var Bear     = require('./app/models/bear');
+// Movie models lives here
+var Movie     = require('./app/models/movie');
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -49,72 +49,86 @@ router.get('/', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
 
-// on routes that end in /bears
+// on routes that end in /movies
 // ----------------------------------------------------
-router.route('/bears')
+router.route('/movies')
 
-	// create a bear (accessed at POST http://localhost:8080/bears)
+	// create a movie (accessed at POST http://localhost:8080/movies)
 	.post(function(req, res) {
-		
-		var bear = new Bear();		// create a new instance of the Bear model
-		bear.name = req.body.name;  // set the bears name (comes from the request)
+		console.log(req.body);
+		var movie = new Movie();		// create a new instance of the Movie model
+		movie.name = req.body.name;  // set the movies name (comes from the request)
+		movie.url = req.body.url;
+		movie.length = req.body.length;
+		movie.images = req.body.images;
+		movie.categories = req.body.categories;
+		movie.videos = req.body.videos;
+		movie.description = req.body.description;
+		movie.year = req.body.year;
+		movie.status = req.body.status;
+		movie.country = req.body.country;
+		movie.director = req.body.director;
+		movie.producer = req.body.producer;
+		movie.actors = req.body.actors;
+		movie.book = req.body.book;
+		movie.history = req.body.history;
 
-		bear.save(function(err) {
+		movie.save(function(err) {
 			if (err)
 				res.send(err);
 
-			res.json({ message: 'Bear created!' });
+			res.json({ message: 'movie created whaaat!' });
 		});
 
 		
 	})
 
-	// get all the bears (accessed at GET http://localhost:8080/api/bears)
+	// get all the movies (accessed at GET http://localhost:8080/api/movies)
 	.get(function(req, res) {
-		Bear.find(function(err, bears) {
+		Movie.find(function(err, movies) {
 			if (err)
 				res.send(err);
 
-			res.json(bears);
+			res.json(movies);
 		});
 	});
 
-// on routes that end in /bears/:bear_id
+// on routes that end in /movies/:movie_id
 // ----------------------------------------------------
-router.route('/bears/:bear_id')
+router.route('/movies/:movie_id')
 
-	// get the bear with that id
+	// get the movie with that id
 	.get(function(req, res) {
-		Bear.findById(req.params.bear_id, function(err, bear) {
+		Movie.findById(req.params.movie_id, function(err, movie) {
 			if (err)
 				res.send(err);
-			res.json(bear);
+			res.json(movie);
 		});
 	})
 
-	// update the bear with this id
+	// update the movie with this id
 	.put(function(req, res) {
-		Bear.findById(req.params.bear_id, function(err, bear) {
+		Movie.findById(req.params.movie_id, function(err, movie) {
 
 			if (err)
 				res.send(err);
 
-			bear.name = req.body.name;
-			bear.save(function(err) {
+			movie.name = req.body.name;
+			movie.save(function(err) {
 				if (err)
 					res.send(err);
 
-				res.json({ message: 'Bear updated!' });
+				res.json({ message: 'movie updated!' });
 			});
 
 		});
 	})
 
-	// delete the bear with this id
+	// delete the movie with this id
 	.delete(function(req, res) {
-		Bear.remove({
-			_id: req.params.bear_id
-		}, function(err, bear) {
+		Movie.remove({
+			_id: req.params.movie_id
+		}, function(err, movie) {
 			if (err)
 				res.send(err);
 
