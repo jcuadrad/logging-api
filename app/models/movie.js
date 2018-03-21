@@ -1,7 +1,7 @@
-var mongoose     = require('mongoose');
-var Schema       = mongoose.Schema;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-var MovieSchema   = new Schema({
+var MovieSchema = new Schema({
 	name: String,
 	url: String,
 	length: Number,
