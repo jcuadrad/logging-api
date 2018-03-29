@@ -90,10 +90,12 @@ router.route('/movies')
 	// get all the movies (accessed at GET http://localhost:8080/api/movies)
 	.get(function(req, res) {
 		Movie.find(function(err, movies) {
-			if (err)
-				res.send(err);
-
-			res.json(movies);
+			if (err){
+				console.log(err);
+				return res.send(err);
+			} else {
+				return res.json(movies);
+			}
 		});
 	});
 
