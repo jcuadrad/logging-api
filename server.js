@@ -7,6 +7,10 @@ var bodyParser = require('body-parser');
 var app        = express();
 var morgan     = require('morgan');
 
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 // configure app
 app.use(morgan('dev')); // log requests to the console
 
@@ -18,7 +22,7 @@ var port     = process.env.PORT || 8080; // set our port
 
 // DATABASE SETUP
 var mongoose   = require('mongoose');
-mongoose.connect("mongodb://localhost/movies-dev"); // connect to our database
+mongoose.connect(process.env.MONGODB_URI); // connect to our database
 
 // Handle the connection event
 var db = mongoose.connection;
