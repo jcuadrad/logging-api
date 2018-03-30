@@ -6,6 +6,7 @@ var express    = require('express');
 var bodyParser = require('body-parser');
 var app        = express();
 var morgan     = require('morgan');
+var cors     = require('cors');
 
 // configure app
 app.use(morgan('dev')); // log requests to the console
@@ -13,6 +14,9 @@ app.use(morgan('dev')); // log requests to the console
 // configure body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Setup CORS
+app.use(cors());
 
 var port     = process.env.PORT || 8080; // set our port
 
@@ -27,6 +31,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log("DB connection alive");
 });
+
 
 // Movie models lives here
 var Movie     = require('./app/models/movie');
@@ -58,11 +63,11 @@ router.route('/movies')
 		console.log(req.body);
 		var movie = new Movie();		// create a new instance of the Movie model
 		movie.name = req.body.name;  // set the movies name (comes from the request)
-		movie.url = req.body.url;
+		movie.poster = req.body.poster;
 		movie.length = req.body.length;
 		movie.images = req.body.images;
 		movie.categories = req.body.categories;
-		movie.videos = req.body.videos;
+		movie.trailer = req.body.trailer;
 		movie.description = req.body.description;
 		movie.year = req.body.year;
 		movie.status = req.body.status;

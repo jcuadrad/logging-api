@@ -3,11 +3,11 @@ var Schema = mongoose.Schema;
 
 var MovieSchema = new Schema({
 	name: String,
-	url: String,
+	poster: String,
 	length: Number,
 	images: Array,
 	categories: Array,
-	videos: Array,
+	trailer: String,
 	description: String,
 	year: Number,
 	status: String,
