@@ -8,6 +8,10 @@ var app        = express();
 var morgan     = require('morgan');
 var cors     = require('cors');
 
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 // configure app
 app.use(morgan('dev')); // log requests to the console
 
@@ -22,7 +26,7 @@ var port     = process.env.PORT || 8080; // set our port
 
 // DATABASE SETUP
 var mongoose   = require('mongoose');
-mongoose.connect("mongodb://localhost/movies-dev"); // connect to our database
+mongoose.connect(process.env.MONGODB_URI); // connect to our database
 
 // Handle the connection event
 var db = mongoose.connection;
@@ -91,10 +95,12 @@ router.route('/movies')
 	// get all the movies (accessed at GET http://localhost:8080/api/movies)
 	.get(function(req, res) {
 		Movie.find(function(err, movies) {
-			if (err)
-				res.send(err);
-
-			res.json(movies);
+			if (err){
+				console.log(err);
+				return res.send(err);
+			} else {
+				return res.json(movies);
+			}
 		});
 	});
 
