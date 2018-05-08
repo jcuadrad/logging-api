@@ -37,8 +37,9 @@ db.once('open', function() {
 });
 
 
-// Movie models lives here
-var Movie     = require('./app/models/movie');
+// Import models
+var Action = require('./app/models/action');
+var Query = require('./app/models/query');
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -60,36 +61,35 @@ router.get('/', function(req, res) {
 
 // on routes that end in /movies
 // ----------------------------------------------------
-router.route('/movies')
+router.route('/log')
 
 	// create a movie (accessed at POST http://localhost:8080/movies)
 	.post(function(req, res) {
 		console.log(req.body);
-		var movie = new Movie();		// create a new instance of the Movie model
-		movie.name = req.body.name;  // set the movies name (comes from the request)
-		movie.poster = req.body.poster;
-		movie.length = req.body.length;
-		movie.images = req.body.images;
-		movie.categories = req.body.categories;
-		movie.trailer = req.body.trailer;
-		movie.description = req.body.description;
-		movie.year = req.body.year;
-		movie.status = req.body.status;
-		movie.country = req.body.country;
-		movie.director = req.body.director;
-		movie.producer = req.body.producer;
-		movie.actors = req.body.actors;
-		movie.book = req.body.book;
-		movie.history = req.body.history;
+		if (req.body.characters) {
+			var query = new Query();
+			query.queryID = req.body.queryID;
+			query.characters = req.body.characters;
+			query.filters = req.body.filters;
 
-		movie.save(function(err) {
-			if (err)
-				res.send(err);
+			query.save(err => {
+				if (err)
+					res.send(err);
+				res.json({ message: 'QUERY LOGGED!' });
+			})
+		} else if (req.body.action) {
+			var action = new Action();
+			action.sessionID = req.body.sessionId;
+			action.action = req.body.action;
+			action.queryID = req.body.queryId;
+			action.Timestamp = req.body.Timestamp;
 
-			res.json({ message: 'movie created whaaat!' });
-		});
-
-		
+			action.save(err => {
+				if (err)
+					res.send(err);
+				res.json({ message: 'ACTION LOGGED!' });
+			})
+		}
 	})
 
 	// get all the movies (accessed at GET http://localhost:8080/api/movies)
