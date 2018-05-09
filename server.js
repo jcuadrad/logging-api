@@ -1,32 +1,32 @@
 // BASE SETUP
 // =============================================================================
 
-// call the packages we need
-var express    = require('express');
+// Add the packages we need
+var express = require('express');
 var bodyParser = require('body-parser');
-var app        = express();
-var morgan     = require('morgan');
-var cors     = require('cors');
+var app = express();
+var morgan = require('morgan');
+var cors = require('cors');
 
 const dotenv = require('dotenv');
 
 dotenv.config();
 
-// configure app
+// Configure app
 app.use(morgan('dev')); // log requests to the console
 
-// configure body parser
+// Configure body parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Setup CORS
 app.use(cors());
 
-var port     = process.env.PORT || 8080; // set our port
+var port = process.env.PORT || 8080; // set our port
 
 // DATABASE SETUP
 var mongoose   = require('mongoose');
-mongoose.connect(process.env.MONGODB_URI); // connect to our database
+mongoose.connect(process.env.MONGODB_URI); // Connect to our database
 
 // Handle the connection event
 var db = mongoose.connection;
@@ -44,17 +44,17 @@ var Query = require('./app/models/query');
 // ROUTES FOR OUR API
 // =============================================================================
 
-// create our router
+// Create our router
 var router = express.Router();
 
-// middleware to use for all requests
+// Middleware to use for all requests
 router.use(function(req, res, next) {
 	// do logging
 	console.log('Something is happening.');
 	next();
 });
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+// Test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
