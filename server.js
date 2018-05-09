@@ -59,15 +59,15 @@ router.get('/', function(req, res) {
 	res.json({ message: 'hooray! welcome to our api!' });	
 });
 
-// on routes that end in /movies
+// Route used to log
 // ----------------------------------------------------
 router.route('/log')
-
-	// create a movie (accessed at POST http://localhost:8080/movies)
+	// Create a log (accessed at POST http://localhost:8080/api/log)
 	.post(function(req, res) {
 		console.log(req.body);
 		if (req.body.characters) {
 			var query = new Query();
+			query.origin = req.headers.origin;
 			query.queryID = req.body.queryID;
 			query.characters = req.body.characters;
 			query.filters = req.body.filters;
@@ -79,6 +79,7 @@ router.route('/log')
 			})
 		} else if (req.body.action) {
 			var action = new Action();
+			action.origin = req.headers.origin;
 			action.sessionID = req.body.sessionId;
 			action.action = req.body.action;
 			action.queryID = req.body.queryId;
@@ -92,61 +93,14 @@ router.route('/log')
 		}
 	})
 
-	// get all the movies (accessed at GET http://localhost:8080/api/movies)
+	// get all the logs (accessed at GET http://localhost:8080/api/log)
 	.get(function(req, res) {
-		Movie.find(function(err, movies) {
-			if (err){
-				console.log(err);
-				return res.send(err);
-			} else {
-				return res.json(movies);
-			}
-		});
+		Action.find({}, (err, action) => {
+			if (err)
+				res.send(err);
+			res.json(action);
+		})
 	});
-
-// on routes that end in /movies/:movie_id
-// ----------------------------------------------------
-router.route('/movies/:movie_id')
-
-	// get the movie with that id
-	.get(function(req, res) {
-		Movie.findById(req.params.movie_id, function(err, movie) {
-			if (err)
-				res.send(err);
-			res.json(movie);
-		});
-	})
-
-	// update the movie with this id
-	.put(function(req, res) {
-		Movie.findById(req.params.movie_id, function(err, movie) {
-
-			if (err)
-				res.send(err);
-
-			movie.name = req.body.name;
-			movie.save(function(err) {
-				if (err)
-					res.send(err);
-
-				res.json({ message: 'movie updated!' });
-			});
-
-		});
-	})
-
-	// delete the movie with this id
-	.delete(function(req, res) {
-		Movie.remove({
-			_id: req.params.movie_id
-		}, function(err, movie) {
-			if (err)
-				res.send(err);
-
-			res.json({ message: 'Successfully deleted' });
-		});
-	});
-
 
 // REGISTER OUR ROUTES -------------------------------
 app.use('/api', router);

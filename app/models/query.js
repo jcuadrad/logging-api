@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var QuerySchema = new Schema({
+	origin: String,
 	queryID: String,
 	characters: Array,
 	filters: {
